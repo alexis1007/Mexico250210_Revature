@@ -62,6 +62,7 @@ public class FlightController {
         Javalin app = Javalin.create();
         app.post("/flights", this::postFlightHandler);
         app.put("/flights/{flight_id}", this::updateFlightHandler);
+        app.get("flights/{flight_id}", this::getFlightById);
         app.get("/flights", this::getAllFlightsHandler);
         app.get("/flights/departing/{departure_city}/arriving/{arrival_city}",
                 this::getAllFlightsDepartingFromCityArrivingToCityHandler);
@@ -85,6 +86,11 @@ public class FlightController {
         }else{
             ctx.json(mapper.writeValueAsString(addedFlight));
         }
+    }
+
+    private void getFlightById(Context ctx) throws JsonProcessingException {
+        int flight_id = Integer.parseInt(ctx.pathParam("flight_id"));
+        ctx.json(flightService.getFlightById(flight_id));
     }
 
     /**
